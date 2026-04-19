@@ -1,8 +1,10 @@
 # Date and Time Helpers Web
 
-A static GitHub Pages site with developer notes and JavaScript snippets for date and time work.
+Date and Time Helpers Web is a small static reference site for developers working with dates, times, timestamps, and calendar edge cases.
 
-It covers:
+Visit the site: [date-and-time.github.io/web](https://date-and-time.github.io/web/)
+
+## What It Covers
 
 - Unix timestamp conversion.
 - Adding and subtracting dates.
@@ -11,32 +13,32 @@ It covers:
 - Age calculation.
 - Date/time testing checklists.
 
-The page also links to related browser tools on [Free Online No Sign Up](https://freeonlinenosignup.com/date-time).
+The site includes copyable JavaScript snippets, practical implementation notes, and manual verification links for common date/time problems.
 
-## Files
+## Useful Calculators
 
-- `index.html` - the full static page.
-- `styles.css` - all page styling.
+These browser tools are linked throughout the site:
 
-## Publish on GitHub Pages
+- [Unix timestamp converter](https://freeonlinenosignup.com/date-time/unix-timestamp)
+- [Date add/subtract calculator](https://freeonlinenosignup.com/date-time/date-add)
+- [Days between dates calculator](https://freeonlinenosignup.com/date-time/days-between)
+- [ISO week number calculator](https://freeonlinenosignup.com/date-time/week-number)
+- [Current week number](https://freeonlinenosignup.com/date-time/current-week-number)
+- [Exact age calculator](https://freeonlinenosignup.com/date-time/age)
+- [Free date and time calculators](https://freeonlinenosignup.com/date-time)
 
-Place `index.html`, `styles.css`, and this `README.md` at the root of the GitHub repository.
+## Why This Exists
 
-In GitHub:
+Date and time bugs often come from small assumptions: seconds vs milliseconds, inclusive vs exclusive ranges, local time vs UTC, month-end behavior, daylight saving changes, and ISO week-year boundaries.
 
-1. Open the repository settings.
-2. Go to **Pages**.
-3. Set the source to the `main` branch.
-4. Set the folder to `/root`.
-5. Save and wait for the deployment to finish.
+This project collects the short examples and checks that are useful before shipping scheduling, reporting, billing, analytics, reminders, or eligibility logic.
 
-For a repository at `github.com/date-and-time/web`, the default GitHub Pages URL is:
+## Project Files
 
-```text
-https://date-and-time.github.io/web/
-```
+- `index.html` - the static reference page.
+- `styles.css` - the page styles.
+- `LICENSE` - MIT license.
 
-## Local preview
+## License
 
-Open `index.html` directly in a browser. No build step is required.
-
+MIT
