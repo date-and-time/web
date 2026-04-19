@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Date and Time Helpers for Developers</title>
+    <meta name="description" content="Developer guides and JavaScript snippets for Unix timestamps, date math, days between dates, ISO week numbers, age calculation, and date/time testing.">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="#top">Date and Time Helpers</a>
+        <div class="nav-links">
+          <a href="#guides">Guides</a>
+          <a href="#snippets">Snippets</a>
+          <a href="#checklist">Checklist</a>
+          <a href="#tools">Tools</a>
+        </div>
+      </nav>
+      <section id="top" class="hero">
+        <div>
+          <p class="eyebrow">Practical date/time notes</p>
+          <h1>Date and time helpers for developers</h1>
+          <p class="hero-copy">
+            Copyable examples and quick rules for Unix timestamps, date arithmetic,
+            days between dates, ISO week numbers, age calculation, and date/time tests.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#guides">Read the guides</a>
+            <a class="button" href="https://freeonlinenosignup.com/date-time">Open date calculators</a>
+          </div>
+        </div>
+        <aside class="quick-card" aria-label="Core rules">
+          <h2>Core rules</h2>
+          <ul>
+            <li>Store instants in UTC.</li>
+            <li>Store plain dates as dates.</li>
+            <li>Define inclusive vs exclusive ranges.</li>
+            <li>Do not assume every local day has 24 hours.</li>
+            <li>Use ISO weeks only when required.</li>
+          </ul>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section id="guides" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Guides</p>
+          <h2>Common date and time tasks</h2>
+        </div>
+
+        <div class="guide-grid">
+          <article class="guide-card">
+            <h3>Unix timestamp conversion</h3>
+            <p>
+              Unix timestamps count elapsed time since <code>1970-01-01T00:00:00Z</code>.
+              APIs commonly use seconds, while JavaScript <code>Date</code> expects milliseconds.
+            </p>
+            <pre><code>const seconds = 1712345678
+const date = new Date(seconds * 1000)
+
+const milliseconds = Date.now()
+const unixSeconds = Math.floor(milliseconds / 1000)</code></pre>
+            <p>
+              A 10 digit value is usually seconds. A 13 digit value is usually milliseconds.
+              Verify both with a <a href="https://freeonlinenosignup.com/date-time/unix-timestamp">Unix timestamp converter</a>.
+            </p>
+          </article>
+
+          <article class="guide-card">
+            <h3>Adding and subtracting dates</h3>
+            <p>
+              Calendar arithmetic needs clear rules for month ends, leap years, daylight saving
+              changes, and local vs UTC behavior.
+            </p>
+            <pre><code>function addDays(date, days) {
+  const result = new Date(date)
+  result.setDate(result.getDate() + days)
+  return result
+}</code></pre>
+            <p>
+              For one-off checks, use the
+              <a href="https://freeonlinenosignup.com/date-time/date-add">date add/subtract calculator</a>.
+            </p>
+          </article>
+
+          <article class="guide-card">
+            <h3>Days between dates</h3>
+            <p>
+              Decide whether the end date is included before implementing a range calculation.
+              Most APIs use an exclusive end date.
+            </p>
+            <pre><code>function diffUtcDays(a, b) {
+  const start = Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate())
+  const end = Date.UTC(b.getUTCFullYear(), b.getUTCMonth(), b.getUTCDate())
+  return Math.round((end - start) / 86400000)
+}</code></pre>
+            <p>
+              Compare calendar days, weeks, approximate months, and business days with a
+              <a href="https://freeonlinenosignup.com/date-time/days-between">days between dates calculator</a>.
+            </p>
+          </article>
+
+          <article class="guide-card">
+            <h3>ISO week numbers</h3>
+            <p>
+              ISO weeks start on Monday. Week 1 is the week containing the first Thursday of the
+              calendar year, and the ISO week year can differ from the calendar year.
+            </p>
+            <pre><code>function isoWeek(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+  const day = d.getUTCDay() || 7
+  d.setUTCDate(d.getUTCDate() + 4 - day)
+  const year = d.getUTCFullYear()
+  const start = new Date(Date.UTC(year, 0, 1))
+  const week = Math.ceil(((d - start) / 86400000 + 1) / 7)
+  return { year, week }
+}</code></pre>
+            <p>
+              Check any date with the
+              <a href="https://freeonlinenosignup.com/date-time/week-number">ISO week number calculator</a>
+              or see the <a href="https://freeonlinenosignup.com/date-time/current-week-number">current week number</a>.
+            </p>
+          </article>
+
+          <article class="guide-card">
+            <h3>Age calculation</h3>
+            <p>
+              Human age is usually based on completed calendar years, months, and days, not a
+              millisecond duration divided by an average year length.
+            </p>
+            <pre><code>function ageInYears(dateOfBirth, onDate = new Date()) {
+  let age = onDate.getFullYear() - dateOfBirth.getFullYear()
+  const birthday = new Date(onDate.getFullYear(), dateOfBirth.getMonth(), dateOfBirth.getDate())
+  if (onDate &lt; birthday) age -= 1
+  return age
+}</code></pre>
+            <p>
+              Verify leap years and comparison dates with an
+              <a href="https://freeonlinenosignup.com/date-time/age">exact age calculator</a>.
+            </p>
+          </article>
+
+          <article class="guide-card">
+            <h3>Testing date code</h3>
+            <p>
+              Good tests cover boundaries: start of day, end of month, leap day, daylight saving
+              changes, ISO week crossovers, and seconds vs milliseconds.
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Case</th>
+                  <th>Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Leap day</td>
+                  <td><code>2024-02-29</code></td>
+                </tr>
+                <tr>
+                  <td>ISO crossover</td>
+                  <td><code>2021-01-01</code></td>
+                </tr>
+                <tr>
+                  <td>Month end add</td>
+                  <td><code>2026-01-31 + 1 month</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+        </div>
+      </section>
+
+      <section id="snippets" class="section band">
+        <div class="section-heading">
+          <p class="eyebrow">Snippets</p>
+          <h2>Small JavaScript helpers</h2>
+        </div>
+        <div class="snippet-list">
+          <article>
+            <h3>Start of local day</h3>
+            <pre><code>function startOfLocalDay(date = new Date()) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+}</code></pre>
+          </article>
+          <article>
+            <h3>Start of UTC day</h3>
+            <pre><code>function startOfUtcDay(date = new Date()) {
+  return new Date(Date.UTC(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate()
+  ))
+}</code></pre>
+          </article>
+          <article>
+            <h3>Format as YYYY-MM-DD</h3>
+            <pre><code>function toDateOnly(date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}</code></pre>
+          </article>
+        </div>
+      </section>
+
+      <section id="checklist" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Checklist</p>
+          <h2>Before shipping date/time code</h2>
+        </div>
+        <div class="checklist">
+          <div>
+            <h3>Inputs</h3>
+            <ul>
+              <li>Empty date field.</li>
+              <li>Invalid date string.</li>
+              <li>Ambiguous local date string.</li>
+              <li>Date-time with explicit timezone.</li>
+              <li>Unix seconds and milliseconds.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Boundaries</h3>
+            <ul>
+              <li>Start and end of day.</li>
+              <li>End of month and year.</li>
+              <li>Leap day.</li>
+              <li>Daylight saving transition.</li>
+              <li>ISO week year boundary.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Business rules</h3>
+            <ul>
+              <li>Inclusive vs exclusive end dates.</li>
+              <li>Calendar days vs business days.</li>
+              <li>Local timezone vs UTC.</li>
+              <li>Fixed duration vs calendar duration.</li>
+              <li>Leap day policy for age calculation.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="tools" class="section tools">
+        <div class="section-heading">
+          <p class="eyebrow">Manual verification</p>
+          <h2>Related browser tools</h2>
+        </div>
+        <div class="tool-links">
+          <a href="https://freeonlinenosignup.com/date-time/unix-timestamp">Unix timestamp converter</a>
+          <a href="https://freeonlinenosignup.com/date-time/date-add">Date add/subtract calculator</a>
+          <a href="https://freeonlinenosignup.com/date-time/days-between">Days between dates calculator</a>
+          <a href="https://freeonlinenosignup.com/date-time/week-number">ISO week number calculator</a>
+          <a href="https://freeonlinenosignup.com/date-time/current-week-number">Current week number</a>
+          <a href="https://freeonlinenosignup.com/date-time/age">Exact age calculator</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        More date and time utilities:
+        <a href="https://freeonlinenosignup.com/date-time">free date and time calculators</a>.
+      </p>
+    </footer>
+  </body>
+</html>
